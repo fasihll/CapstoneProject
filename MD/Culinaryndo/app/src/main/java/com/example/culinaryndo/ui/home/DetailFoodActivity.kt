@@ -1,12 +1,17 @@
 package com.example.culinaryndo.ui.home
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.culinaryndo.R
 import com.example.culinaryndo.ViewModelFactory
@@ -14,7 +19,10 @@ import com.example.culinaryndo.data.Result
 import com.example.culinaryndo.data.model.DataItem
 import com.example.culinaryndo.databinding.ActivityDetailFoodBinding
 import com.example.culinaryndo.ui.main.MainActivity
+import com.example.culinaryndo.ui.maps.MapsActivity
 import com.example.culinaryndo.ui.scan.ScanActivity.Companion.FROM_SCAN
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class DetailFoodActivity : AppCompatActivity() {
 
@@ -22,6 +30,8 @@ class DetailFoodActivity : AppCompatActivity() {
     private val viewModel by viewModels<HomeViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private lateinit var foodName: String
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +40,7 @@ class DetailFoodActivity : AppCompatActivity() {
 
         val data = intent.getParcelableExtra<DataItem>(FOODS) as DataItem
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         binding.btnBack.setOnClickListener {
             if (intent.getStringExtra(FROM_SCAN) != null){
@@ -55,6 +66,7 @@ class DetailFoodActivity : AppCompatActivity() {
                                 .into(binding.ivImageFood)
 
                             binding.tvFoodName.text = result.title
+                            foodName = result.title.toString()
 
                             binding.tvDescription.text = result.description
                             setLoading(false)
@@ -92,6 +104,9 @@ class DetailFoodActivity : AppCompatActivity() {
         }
 
         binding.btnBookmark.setOnClickListener { bookmarkButton(data.id.toString()) }
+        binding.btnMaps.setOnClickListener{
+            getMyLastLocation()
+        }
 
     }
 
@@ -140,6 +155,58 @@ class DetailFoodActivity : AppCompatActivity() {
                     Toast.makeText(this@DetailFoodActivity, result.error, Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
+                    getMyLastLocation()
+                }
+                else -> {}
+            }
+        }
+
+    private fun checkPermission(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getMyLastLocation() {
+        if     (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+        ){
+            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                if (location != null) {
+//                    Log.d("MYLOCATION_DETAIL",location.toString())
+                    val intent = Intent(this@DetailFoodActivity,MapsActivity::class.java)
+                    intent.putExtra(MapsActivity.FOOD_NAME,foodName)
+                    intent.putExtra(MapsActivity.MY_LOCATION_LATITUDE,location.latitude)
+                    intent.putExtra(MapsActivity.MY_LOCATION_LONGTITUDE,location.longitude)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        this@DetailFoodActivity,
+                        "Location is not found. Try Again",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 

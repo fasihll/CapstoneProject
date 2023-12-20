@@ -6,8 +6,10 @@ import com.example.culinaryndo.data.model.BookmarkResponse
 import com.example.culinaryndo.data.model.DefaultResponse
 import com.example.culinaryndo.data.model.DetailResponse
 import com.example.culinaryndo.data.model.FoodResponse
+import com.example.culinaryndo.data.model.GooglePlaceApiResponse
 import com.example.culinaryndo.data.model.HistoryResponse
 import com.example.culinaryndo.data.model.UserResponse
+import com.google.android.gms.maps.model.LatLng
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
@@ -19,6 +21,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiServices {
     @FormUrlEncoded
@@ -114,4 +117,13 @@ interface ApiServices {
         @Part("oldPassword") oldPassword: RequestBody?,
         @Part("newPassword") newPassword: RequestBody?,
     ): DefaultResponse
+
+    @GET("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+    suspend fun getNarestPlaceFood(
+        @Query("location") location: String,
+        @Query("radius") radius: Int,
+        @Query("type") type: String,
+        @Query("key") key: String,
+        @Query("keyword") keyword: String,
+    ): GooglePlaceApiResponse
 }
