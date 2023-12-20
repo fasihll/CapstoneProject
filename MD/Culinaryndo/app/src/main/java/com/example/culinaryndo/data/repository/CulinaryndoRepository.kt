@@ -2,6 +2,7 @@ package com.example.culinaryndo.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import com.example.culinaryndo.BuildConfig
 import com.example.culinaryndo.data.Result
 import com.example.culinaryndo.data.model.AddBookmarkResponse
 import com.example.culinaryndo.data.model.AddHisotryResponse
@@ -9,11 +10,14 @@ import com.example.culinaryndo.data.model.BookmarkResponse
 import com.example.culinaryndo.data.model.DefaultResponse
 import com.example.culinaryndo.data.model.DetailResponse
 import com.example.culinaryndo.data.model.FoodResponse
+import com.example.culinaryndo.data.model.GooglePlaceApiResponse
 import com.example.culinaryndo.data.model.HistoryResponse
+import com.example.culinaryndo.data.model.Location
 import com.example.culinaryndo.data.model.LoginResult
 import com.example.culinaryndo.data.model.UserResponse
 import com.example.culinaryndo.data.network.ApiServices
 import com.example.culinaryndo.data.pref.UserPreference
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaType
@@ -266,6 +270,23 @@ class CulinaryndoRepository(
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, DefaultResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
+        }
+    }
+
+    fun getNarestPlaceFood(location: LatLng,radiud: String,type: String,keyword: String):
+            LiveData<Result<GooglePlaceApiResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getNarestPlaceFood("${location.latitude},${location.longitude}",
+                radiud.toInt(),
+                type,
+                BuildConfig
+                .MAPS_API_KEY,keyword)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, GooglePlaceApiResponse::class.java)
+            emit(Result.Error(errorResponse.error_message.toString()))
         }
     }
 

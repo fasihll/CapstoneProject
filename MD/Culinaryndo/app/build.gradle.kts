@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -19,8 +20,8 @@ android {
         applicationId = "com.example.culinaryndo"
         minSdk = 24
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 3
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,7 +63,14 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.4")
 
     implementation("com.google.firebase:firebase-auth:22.3.0")
+
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.libraries.places:places:3.3.0")
+    implementation("com.google.maps.android:places-ktx:2.0.0")
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+
 
 
     testImplementation("junit:junit:4.13.2")

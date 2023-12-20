@@ -53,4 +53,10 @@
     <string name="btn_bookmark_now">Bookmark Now</string>
     <string name="warning_passsword_minimun">Password minimal 8 karakter</string>
     <string name="btn_remove_bookmark">Remove Bookmark</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="Maps">Nearest Location</string>
+    <string name="normal_type">Normal</string>
+    <string name="satellite_type">Satellite</string>
+    <string name="terrain_type">Terrain</string>
+    <string name="hybrid_type">Hybrid</string>
 </resources>

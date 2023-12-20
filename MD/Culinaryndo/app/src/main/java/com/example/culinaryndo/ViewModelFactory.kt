@@ -10,6 +10,7 @@ import com.example.culinaryndo.ui.history.HistoryViewModel
 import com.example.culinaryndo.ui.home.HomeViewModel
 import com.example.culinaryndo.ui.login.AuthViewModel
 import com.example.culinaryndo.ui.main.MainViewModel
+import com.example.culinaryndo.ui.maps.MapsViewModel
 import com.example.culinaryndo.ui.profile.ProfileViewModel
 import com.example.culinaryndo.ui.profile.setting.SettingViewModel
 import com.example.culinaryndo.ui.scan.ScanViewModel
@@ -45,6 +46,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(SettingViewModel::class.java) -> {
                 SettingViewModel(culinaryndoRepository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(culinaryndoRepository) as T
             }
             else -> throw IllegalArgumentException("Unknow ViewModel Class: "+ modelClass.name)
         }

@@ -1,5 +1,6 @@
 package com.example.culinaryndo.ui.home
 
+import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,8 @@ class HomeViewModel(private val repository: CulinaryndoRepository): ViewModel() 
     private val _keyword = MutableLiveData<String>()
     val keyword: LiveData<String>
         get() = _keyword
+    val location = MutableLiveData<Location>()
+
 
 
     fun getSession(): LiveData<LoginResult> {
