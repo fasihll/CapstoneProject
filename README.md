@@ -61,7 +61,7 @@ npm run start
 Set Google Credential or API_KEY in local.properties:
 
 ```sh
-MAPS_API_KEY= YOUR_GOOLE_API_KEY
+MAPS_API_KEY= YOUR_GOOGLE_API_KEY
 ```
 
 ## Api Documentation
