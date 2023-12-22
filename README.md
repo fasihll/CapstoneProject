@@ -14,7 +14,7 @@ C008BSX4077 - Elyra Dina Oktaviani - Universitas Gadjah Mada - Cloud Computing
 
 A179BSY2366 - Muhamad Andhika Satya Azizi - Universitas Ahmad Dahlan - Mobile Development
 
-MA129BSY2594 - Ach Fasihul Lisan - Politeknik Negeri Jember - Mobile Development
+A129BSY2594 - Ach Fasihul Lisan - Politeknik Negeri Jember - Mobile Development
 
 
 ![](header.png)
